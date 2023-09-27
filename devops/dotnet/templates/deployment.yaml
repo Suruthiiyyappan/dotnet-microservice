@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: dotnetapp
-        image: dirdef123.azurecr.io/{{ .Values.deployment.containers.image }}:{{ .Values.deployment.containers.tag }}
+        image: {{ .Values.image }}
         ports:
         - containerPort: 80
         livenessProbe:
@@ -36,11 +36,3 @@ spec:
           periodSeconds: 20
           successThreshold: 1
           timeoutSeconds: 10
-        volumeMounts:
-        - mountPath: "/mnt/azure"
-          name: volume
-      terminationGracePeriodSeconds: 20
-      volumes:
-      - name: volume
-        persistentVolumeClaim:
-          claimName: azure-managed-disk
