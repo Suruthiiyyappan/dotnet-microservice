@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnetapp-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: dotnetapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dotnetapp
+  template:
+    metadata:
+      labels:
+        app: dotnetapp
+    spec:
+      containers:
+      - name: dotnetapp
+        image: dirdef123.azurecr.io/{{ .Values.deployment.containers.image }}:{{ .Values.deployment.containers.tag }}
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 10
+        volumeMounts:
+        - mountPath: "/mnt/azure"
+          name: volume
+      terminationGracePeriodSeconds: 20
+      volumes:
+      - name: volume
+        persistentVolumeClaim:
+          claimName: azure-managed-disk

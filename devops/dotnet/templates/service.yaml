@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dotnetapp-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: dotnetapp
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+
+  
